@@ -21,40 +21,73 @@ export async function POST(request: Request) {
       );
     }
 
+    // Limit job description length
+    const limitedJobDescription = jobDescription.slice(0, 4000);
+
     // Extract job details using OpenAI
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo-1106',
+        messages: [
+          {
+            role: 'system',
+            content: `Extract key details from the job description into a structured JSON format. Include:
+              - role_title: The job title
+              - required_skills: Array of required technical skills
+              - preferred_skills: Array of preferred/optional skills
+              - responsibilities: Array of key job responsibilities
+              - qualifications: Array of required qualifications (education, experience)
+              - company_info: Basic company details if provided
+              Format as valid JSON with these exact keys.`
+          },
+          {
+            role: 'user',
+            content: limitedJobDescription
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 1000,
+        response_format: { type: "json_object" }
+      });
+
+      let extractedDetails;
+      try {
+        extractedDetails = JSON.parse(completion.choices[0].message.content || '{}');
+      } catch (jsonError) {
+        console.error('JSON Parse Error:', jsonError);
+        return NextResponse.json(
+          {
+            error: 'Failed to parse job details',
+            details: 'The AI response was not in valid JSON format'
+          },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: extractedDetails
+      });
+
+    } catch (openaiError) {
+      console.error('OpenAI API Error:', openaiError);
+      return NextResponse.json(
         {
-          role: 'system',
-          content: `Extract key details from the job description into a structured JSON format. Include:
-            - role_title: The job title
-            - required_skills: Array of required technical skills
-            - preferred_skills: Array of preferred/optional skills
-            - responsibilities: Array of key job responsibilities
-            - qualifications: Array of required qualifications (education, experience)
-            - company_info: Basic company details if provided
-            Format as valid JSON with these exact keys.`
+          error: 'Failed to analyze job description',
+          details: openaiError instanceof Error ? openaiError.message : 'Unknown error'
         },
-        {
-          role: 'user',
-          content: jobDescription
-        }
-      ]
-    });
-
-    const extractedDetails = JSON.parse(completion.choices[0].message.content || '{}');
-
-    return NextResponse.json({
-      success: true,
-      data: extractedDetails
-    });
+        { status: 500 }
+      );
+    }
 
   } catch (error) {
-    console.error('Error processing job description:', error);
+    console.error('Request processing error:', error);
     return NextResponse.json(
-      { error: 'Failed to process job description' },
-      { status: 500 }
+      {
+        error: 'Failed to process request',
+        details: error instanceof Error ? error.message : 'Invalid request format'
+      },
+      { status: 400 }
     );
   }
 }

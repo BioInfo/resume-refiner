@@ -2,6 +2,9 @@
   "functions": {
     "src/app/api/upload-resume/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/parse-job/route.ts": {
+      "maxDuration": 60
     }
   }
 }
