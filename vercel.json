@@ -5,6 +5,9 @@
     },
     "src/app/api/parse-job/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/refine-resume/route.ts": {
+      "maxDuration": 60
     }
   }
 }
