@@ -164,24 +164,21 @@ export default function UploadResumePage() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mx-auto max-w-2xl"
+        className="mx-auto max-w-3xl py-12"
       >
-        <h1 className="mb-4 text-center text-3xl font-bold">Upload Your Resume</h1>
-        
-        <div className="mb-8 text-center text-gray-600">
-          <p>Upload your resume in PDF format.</p>
-          <p className="text-sm mt-2">
-            Note: The upload and information extraction process can take up to 1 minute.
-            Please wait while we analyze your resume.
+        <div className="text-center space-y-4 mb-12">
+          <h1 className="text-4xl font-bold tracking-tight">Upload Your Resume</h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Let our AI analyze your resume and optimize it for your dream job. Upload your PDF resume below.
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="bg-card rounded-xl border shadow-sm p-8 space-y-8">
           <FileUpload 
             onFileSelect={handleFileUpload}
             disabled={uploadState.status === 'uploading'}
@@ -191,19 +188,18 @@ export default function UploadResumePage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="rounded-lg border bg-blue-50 p-4 text-blue-600"
+              className="rounded-xl border bg-primary/5 p-6 text-primary"
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"
+                  className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full"
                 />
                 <div>
-                  <h2 className="font-semibold">Processing Resume</h2>
-                  <p className="text-sm mt-1">
-                    Please wait while we upload and extract information from your resume.
-                    This process can take up to 1 minute.
+                  <h2 className="font-semibold text-lg">Processing Your Resume</h2>
+                  <p className="text-sm text-primary/80 mt-1">
+                    Our AI is analyzing your resume. This typically takes about a minute.
                   </p>
                 </div>
               </div>
@@ -214,15 +210,15 @@ export default function UploadResumePage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-600"
+              className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-destructive"
             >
-              <h2 className="mb-2 font-semibold">Error</h2>
-              <p>{uploadState.error}</p>
+              <h2 className="text-lg font-semibold mb-2">Upload Failed</h2>
+              <p className="text-destructive/90">{uploadState.error}</p>
               <button
                 onClick={() => setUploadState({ status: 'idle' })}
-                className="mt-2 text-sm text-blue-500 hover:text-blue-600"
+                className="mt-4 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
-                Try again
+                Try Again
               </button>
             </motion.div>
           )}
@@ -232,12 +228,19 @@ export default function UploadResumePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="rounded-lg border bg-white p-4"
+              className="rounded-xl border bg-card p-6"
             >
-              <h2 className="mb-4 text-xl font-semibold">Parsed Resume Data</h2>
-              <pre className="max-h-96 overflow-auto rounded bg-gray-50 p-4 text-sm">
-                {JSON.stringify(uploadState.data.parsed, null, 2)}
-              </pre>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Resume Analysis Complete</h2>
+                <div className="text-sm text-muted-foreground">
+                  Redirecting to optimization...
+                </div>
+              </div>
+              <div className="rounded-lg bg-muted/50 p-4 overflow-hidden">
+                <pre className="text-sm overflow-auto max-h-[300px]">
+                  {JSON.stringify(uploadState.data.parsed, null, 2)}
+                </pre>
+              </div>
             </motion.div>
           )}
         </div>
