@@ -10,12 +10,26 @@ export async function GET() {
       .from('resume_data')
       .select('resume_json')
       .eq('user_id', DEMO_USER_ID)
-      .maybeSingle();
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
 
     if (error) {
       console.error('Supabase error:', error);
+      
+      // Handle specific error cases
+      if (error.code === 'PGRST116') {
+        return NextResponse.json(
+          { error: 'Multiple resumes found. Using most recent.' },
+          { status: 409 }
+        );
+      }
+      
       return NextResponse.json(
-        { error: 'Failed to fetch resume data' },
+        {
+          error: 'Failed to fetch resume data',
+          details: error.message
+        },
         { status: 500 }
       );
     }
