@@ -1,6 +1,17 @@
 # Resume Refiner
 
-An AI-powered resume refinement tool that helps optimize resumes for specific job postings. Created by J&S Group, LLC.
+## About
+
+Resume Refiner is an innovative AI-powered platform that transforms the way job seekers optimize their resumes. By leveraging advanced natural language processing and GPT-4 technology, it analyzes both resumes and job descriptions to create perfectly tailored applications that stand out to hiring managers and ATS systems.
+
+Key highlights:
+- 🎯 Smart matching technology aligns your resume with specific job requirements
+- 🤖 AI-powered suggestions enhance your professional narrative
+- 📊 ATS optimization ensures your resume gets past automated screening
+- ⚡ Real-time analysis and instant feedback
+- 🔒 Secure document handling with enterprise-grade privacy
+
+Created by J&S Group, LLC, Resume Refiner combines cutting-edge AI with proven resume optimization techniques to give job seekers a competitive edge in today's dynamic job market.
 
 ## Features
 
