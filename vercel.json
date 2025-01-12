@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "src/app/api/upload-resume/route.ts": {
+      "maxDuration": 60
+    }
+  }
+}

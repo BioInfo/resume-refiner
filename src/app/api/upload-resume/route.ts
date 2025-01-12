@@ -84,12 +84,14 @@ export async function POST(request: Request) {
       try {
         // Use OpenAI to convert text to structured JSON
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4',
+          model: 'gpt-3.5-turbo-1106',
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: resumeText },
+            { role: 'user', content: resumeText.slice(0, 4000) }, // Limit context size
           ],
-          temperature: 0.3,
+          temperature: 0.1,
+          max_tokens: 1000,
+          response_format: { type: "json_object" },
         })
 
         let parsedResume

@@ -6,8 +6,12 @@ export async function parsePDF(buffer: Buffer): Promise<string> {
   }
 
   try {
-    // Pass buffer directly to pdf-parse, no options that might trigger file path usage
-    const result = await pdf(buffer)
+    // Configure pdf-parse with optimized options
+    const result = await pdf(buffer, {
+      pagerender: undefined, // Skip rendering, just extract text
+      max: 10, // Limit to first 10 pages
+      version: 'v2.0.550' // Use latest pdf.js version
+    })
     
     if (!result || typeof result.text !== 'string') {
       throw new Error('No text content found in PDF')
