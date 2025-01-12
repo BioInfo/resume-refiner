@@ -9,6 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+package-lock.json
 
 # testing
 /coverage
@@ -19,6 +20,9 @@
 
 # production
 /build
+/docs/session
+/docs/currentTask.md
+/docs/sharedDB.md
 
 # misc
 .DS_Store
@@ -39,3 +43,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+

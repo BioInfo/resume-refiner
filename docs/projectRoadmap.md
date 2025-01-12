@@ -19,12 +19,15 @@
 ## Progress Tracker
 
 ### Ongoing Tasks
-- [ ] Set up database schema in Supabase.
-- [ ] Develop backend resume parsing logic.
-- [ ] Implement LLM integration for resume and job description analysis.
+- [ ] Implement job description parsing logic.
+- [ ] Create resume refinement workflow.
+- [ ] Add PDF generation capabilities.
 
 ### Completed Tasks
 - [x] Initial project setup with Next.js and Supabase.
+- [x] Set up database schema in Supabase.
+- [x] Develop backend resume parsing logic.
+- [x] Implement LLM integration for resume parsing.
 
 ## Future Scalability Considerations
 - Transition to a multi-user system with authentication.
