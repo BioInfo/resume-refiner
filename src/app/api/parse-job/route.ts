@@ -24,20 +24,22 @@ export async function POST(request: Request) {
     // Limit job description length
     const limitedJobDescription = jobDescription.slice(0, 4000);
 
-    // Extract job details using OpenAI
     try {
+      // Extract job details using OpenAI
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo-1106',
         messages: [
           {
             role: 'system',
             content: `Extract key details from the job description into a structured JSON format. Include:
-              - role_title: The job title
+              - role_title: The job title (string)
               - required_skills: Array of required technical skills
               - preferred_skills: Array of preferred/optional skills
               - responsibilities: Array of key job responsibilities
-              - qualifications: Array of required qualifications (education, experience)
-              - company_info: Basic company details if provided
+              - qualifications: Array of required qualifications
+              - company_info: Object with company details
+              
+              Ensure all array fields are valid arrays, even if empty.
               Format as valid JSON with these exact keys.`
           },
           {
@@ -52,11 +54,30 @@ export async function POST(request: Request) {
 
       let extractedDetails;
       try {
-        extractedDetails = JSON.parse(completion.choices[0].message.content || '{}');
+        const parsed = JSON.parse(completion.choices[0].message.content || '{}');
+        
+        // Validate and transform the response structure
+        extractedDetails = {
+          role_title: typeof parsed.role_title === 'string' ? parsed.role_title : 'Untitled Position',
+          required_skills: Array.isArray(parsed.required_skills) ? parsed.required_skills : [],
+          preferred_skills: Array.isArray(parsed.preferred_skills) ? parsed.preferred_skills : [],
+          responsibilities: Array.isArray(parsed.responsibilities) ? parsed.responsibilities : [],
+          qualifications: Array.isArray(parsed.qualifications) ? parsed.qualifications : [],
+          company_info: typeof parsed.company_info === 'object' && parsed.company_info !== null 
+            ? parsed.company_info 
+            : {}
+        };
+
+        // Validate all arrays contain only strings
+        extractedDetails.required_skills = extractedDetails.required_skills.map(String);
+        extractedDetails.preferred_skills = extractedDetails.preferred_skills.map(String);
+        extractedDetails.responsibilities = extractedDetails.responsibilities.map(String);
+        extractedDetails.qualifications = extractedDetails.qualifications.map(String);
+
       } catch (jsonError) {
-        console.error('JSON Parse Error:', jsonError);
+        console.error('Failed to parse OpenAI response:', jsonError);
         return NextResponse.json(
-          {
+          { 
             error: 'Failed to parse job details',
             details: 'The AI response was not in valid JSON format'
           },
@@ -72,7 +93,7 @@ export async function POST(request: Request) {
     } catch (openaiError) {
       console.error('OpenAI API Error:', openaiError);
       return NextResponse.json(
-        {
+        { 
           error: 'Failed to analyze job description',
           details: openaiError instanceof Error ? openaiError.message : 'Unknown error'
         },
@@ -83,7 +104,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Request processing error:', error);
     return NextResponse.json(
-      {
+      { 
         error: 'Failed to process request',
         details: error instanceof Error ? error.message : 'Invalid request format'
       },
