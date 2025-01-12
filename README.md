@@ -1,5 +1,7 @@
 # Resume Refiner
 
+🚀 **[Try Resume Refiner Now](https://resume-refiner.vercel.app)** - Transform your resume with AI
+
 ## About
 
 Resume Refiner is an innovative AI-powered platform that transforms the way job seekers optimize their resumes. By leveraging advanced natural language processing and GPT-4 technology, it analyzes both resumes and job descriptions to create perfectly tailored applications that stand out to hiring managers and ATS systems.
